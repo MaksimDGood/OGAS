@@ -408,7 +408,7 @@ async def handle_poll_closed(poll: types.Poll):
 
 @dp.message()
 async def handle_candidate_registration(message: types.Message):
-    """Строгий перехват фраз 'иду на выборы' в ответ на объявление бота"""
+    """Перехват фраз 'иду на выборы' в ответ на объявление бота"""
     if not message.text or message.text.startswith("/"):
         return
 
@@ -437,11 +437,9 @@ async def handle_candidate_registration(message: types.Message):
 
 async def main():
     """Главная функция инициализации, настройки меню и старта бота"""
-    # 1. Создаем таблицы базы данных при старте, если их нет
+
     init_db()
-    
-    # 2. Формируем список команд для встроенного меню Telegram
-    # (Слева пишется команда без слэша, справа — её понятное описание)
+
     main_commands = [
         BotCommand(command="help_ogas", description="📜 Показать все команды ОГАС"),
         BotCommand(command="start_election", description="📢 Начать выборы (Сбор заявок кандидатов)"),
@@ -454,14 +452,12 @@ async def main():
         BotCommand(command="stop_config", description="🛠️ Досрочно закрыть опрос настроек чата")
     ]
     
-    # Отправляем список команд в Telegram API, чтобы они появились в интерфейсе
     try:
         await bot.set_my_commands(main_commands)
         print("[СИСТЕМА] Меню команд успешно зарегистрировано в Telegram!")
     except Exception as e:
         print(f"[ОШИБКА] Не удалось настроить меню команд: {e}")
     
-    # 3. Запускаем чтение сообщений
     print("Бот успешно запущен и готов к работе!")
     await dp.start_polling(bot)
 
